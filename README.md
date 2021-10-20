@@ -1,16 +1,59 @@
 # multi_image_picker
 
-A new Flutter project.
+Select Multiple images in Flutter...
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+Add dependecy of image_picker:
+       
+           image_picker: ^0.8.4+3
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+ Then make a method for selectImages():
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+          final ImagePicker imagePicker = ImagePicker();
+          List<XFile>? imageFileList = [];
+
+          void selectImages() async {
+             final List<XFile>? selectedImages = await 
+                    imagePicker.pickMultiImage();
+               if (selectedImages!.isNotEmpty) {
+                  imageFileList!.addAll(selectedImages);
+               }
+              print("Image List Length:" + imageFileList!.length.toString());
+              setState((){});
+          }
+
+Create a builder for showing selected Images:
+
+
+         return Scaffold(
+              appBar: AppBar(
+              title: Text('Multiple Images'),
+             ),
+            body: SafeArea(
+               child: Column(
+                 children: [
+                     ElevatedButton(
+                        onPressed: () {
+                          selectImages();
+                      },
+                     child: Text('Select Images'),
+                   ),
+                   Expanded(
+                      child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GridView.builder(
+                            itemCount: imageFileList!.length,
+                           gridDelegate: 
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3),
+                              itemBuilder: (BuildContext context, int index) {
+                               return Image.file(File(imageFileList![index].path), 
+                            fit: BoxFit.cover,);
+                         }),
+                     ),
+                   ),
+                 ],
+                ),
+              ));
+
